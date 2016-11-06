@@ -55,5 +55,5 @@ describe(`ch3 字符串扩展`, () => {
     //    `
 
     //    expect(helloStr).includes(`dear kafka`).to.be.ok;
-    });
+    // });
 });
