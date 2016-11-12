@@ -186,4 +186,67 @@ describe(`ch6 函数的扩展`, () => {
             expect(trampoline(sum(1, 100000))).to.be.equal(100002);
         });
     });
+
+    describe(`e. 函数的name属性`, () => {
+        it(`#1. 函数的name属性会返回函数名`, () => {
+            function foo () {};
+
+            expect(foo.name).to.be.equal(`foo`);
+        });
+
+        it(`#2. 函数的name属性不可修改`, () => {
+            function foo() {};
+            foo.name = 'haha';
+
+            expect(foo.name).to.be.equal(`foo`);
+        });
+
+        it(`#3.1 匿名函数赋值给变量时，调用name返回变量的名字`, () => {
+            let foo = function() {
+            };
+            let too = foo;
+
+            expect(foo.name).to.be.equal(`foo`);
+            expect(too.name).to.be.equal(`foo`);
+        });
+
+        it(`#3.2 未赋值的匿名函数: name为空字符串`, () => {
+            let funName = 'equal something';
+            funName = (function() {}).name;
+
+            expect(funName).to.be.equal(``);
+        });
+
+        it(`#3.3 Function new出来的function无论赋值与否，name都是'anonymous'`, () => {
+            expect((new Function()).name).to.be.equal(`anonymous`);
+
+            let foo = new Function();
+            expect(foo.name).to.be.equal(`anonymous`);
+        });
+
+        it(`#4.1 前缀: bind的函数，自动加前缀'bound '`, () => {
+            function foo() {};
+
+            expect(foo.bind().name).to.be.equal(`bound foo`);
+        });
+
+        // it(`#4.2 前缀：对象属性的取值函数，自动加前缀'get ' `, () => {
+        //     let obj = {
+        //         get firstName() {
+        //             return 'aha';
+        //         }
+        //     };
+
+        //     expect(obj.firstName.name).to.be.equal(`get firstName`);
+        // });
+
+        it(`#5. 对象方法是一个Symbol值，name返回Symbol值的描述`, () => {
+            const key1 = Symbol(`haha function`);
+            let obj = {
+                [key1](){}
+            };
+
+            expect(obj[key1].name).to.be.equal(`[haha function]`);
+        });
+    });
 });
