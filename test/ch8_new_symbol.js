@@ -157,6 +157,76 @@ describe(`ch8 js的第七种类型：Symbol`, () => {
 
             expect('hello, world'.match(myObj)).to.be.deep.equal(true);
         });
+
+        it(`#5. Symbol.replace: 指定Obj作为String.prototype.replace(searchValue, replaceVal)的searchValue参数时，这个replace()方法的行为`, () => {
+            let obj = {
+                name: `Kafka`,
+                [Symbol.replace](srcStr, replaceVal) {
+                    return srcStr.replace(this.name, replaceVal);
+                },
+            };
+
+            expect('KafkaHeheda'.replace(obj, 'k')).to.be.equal(`kHeheda`);
+        });
+
+        it(`#6. Symbol.search: 指定Obj作为String.prototype.search(p1)的p1参数时，这个search()方法的行为`, () => {
+            let obj = {
+                name: `Kafka`,
+                [Symbol.search](str) {
+                    return str.indexOf(this.name);
+                },
+            };
+
+            expect(`0123Kafka3234`.search(obj)).to.be.equal(4);
+        });
+
+        it.skip(`#7. Symbol.split: 同上`);
+
+        it(`#9. Symbol.iterator, 定义对象的迭代器接口`, () => {
+            let obj = {
+                * [Symbol.iterator]() {
+                    yield 1;
+                    yield 2;
+                    yield 3;
+                }
+            };
+
+            expect([...obj]).to.be.deep.equal([1, 2, 3]);
+        });
+
+        it(`#10. Symbol.toPrimitive: 指定一个方法，当对象被转成原始值时调用`, () => {
+            let obj = {
+                [Symbol.toPrimitive](hint) {
+                    switch(hint) {
+                    case `number`:
+                        return 123;
+                    case `string`:
+                        return 'hjk';
+                    case `default`:
+                        return `default`;
+                    default:
+                        throw new Error();
+                    }
+                }
+            };
+
+            expect(obj * 3).to.be.equal(369);
+            expect(String(obj)).to.be.equal(`hjk`);
+        });
+
+        it.skip(`#11. bug, 还不work. Symbol.toStringTag: 指定一个方法，用来定制对象的toString()中的tag`, () => {
+            let obj = {
+                [Symbol.toStringTag]() {
+                    return `mytype`;
+                }
+            };
+
+
+            expect(Object.prototype.toString.call(obj)).to.be.equal(`[Object mytype]`);
+        });
+
+        it.skip(`#12. Symbol.unscopables: 指向一个对象，该对象指定使用with时，会被忽略掉的属性`, () => {
+        });
     });
 
 });
